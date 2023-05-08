@@ -1936,9 +1936,10 @@ GameObject:
   - component: {fileID: 2869936569896616948}
   - component: {fileID: 2869936569896616949}
   - component: {fileID: 1101349980}
+  - component: {fileID: 7428792254412282622}
   m_Layer: 0
   m_Name: BlueCharacter
-  m_TagString: Untagged
+  m_TagString: blueCharacter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1993,6 +1994,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 08f78e0415a0f4550bbc89a8aa68978c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  target: {fileID: 0}
+  isGunGenerate: 0
 --- !u!195 &1101349980
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -2015,3 +2018,16 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!65 &7428792254412282622
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8827033703799243572}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 0.9279598, y: 2.5823913, z: 0.49691677}
+  m_Center: {x: -0.036020204, y: 0.7911955, z: 0.04772663}

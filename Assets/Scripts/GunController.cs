@@ -112,7 +112,8 @@ public class GunController : MonoBehaviour
                 if (_gunAnimeCounter2 >= 100)
                 {
                     _gunAnimeState = 2;
-                    // TODO: Generate character!
+                    /// Generate character!
+                    EventManager.current.GunGenerateTrigger();
                 }
             }
             else if (_gunAnimeState == 2 && _gunAnimeCounter2 > 0)
@@ -127,7 +128,7 @@ public class GunController : MonoBehaviour
                 if (_gunAnimeCounter2 <= 0)
                 {
                     _gunAnimeState = 0;
-                    //Finished shooting
+                    /// Finished shooting
                     _shooting = false;
                 }
             }

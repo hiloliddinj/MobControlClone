@@ -9,6 +9,10 @@ public class EventManager : MonoBehaviour
     public event Action GoRight;
     public event Action Tap;
 
+    public event Action GunGenerate;
+
+    public event Action<int> MultiplierBlueCharacter;
+
     private void Awake()
     {
         if (current == null)
@@ -33,4 +37,14 @@ public class EventManager : MonoBehaviour
     {
         Tap?.Invoke();
     }
+
+    public void GunGenerateTrigger()
+    {
+        GunGenerate?.Invoke();
+    }
+
+    public void MultiplierBlueCharacterTrigger(int amount)
+    {
+        MultiplierBlueCharacter?.Invoke(amount);
+    } 
 }

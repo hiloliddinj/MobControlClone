@@ -8,22 +8,19 @@ public class MCGameManager : MonoBehaviour
     [SerializeField] private GameObject _birthPoint;
     [SerializeField] private List<GameObject> _blueCharacterList;
 
+    public int blueCharacterCount = 0;
+
     private void Start()
     {
-        EventManager.current.Tap += OnTapTriggered;
+        EventManager.current.GunGenerate += OnGunGenerateTriggered;
     }
 
     private void OnDisable()
     {
-        EventManager.current.Tap -= OnTapTriggered;
+        EventManager.current.GunGenerate -= OnGunGenerateTriggered;
     }
 
-    private void Update()
-    {
-        
-    }
-
-    private void OnTapTriggered()
+    private void OnGunGenerateTriggered()
     {
         //Debug.Log("MCGameManager, OnTapTriggered");
         foreach(GameObject blueCharacter in _blueCharacterList)
@@ -31,10 +28,36 @@ public class MCGameManager : MonoBehaviour
             if (!blueCharacter.activeInHierarchy)
             {
                 blueCharacter.transform.position = _birthPoint.transform.position;
-                blueCharacter.GetComponent<BlueCharacterController>().target = _target1;
+
+                BlueCharacterController bCController = blueCharacter.GetComponent<BlueCharacterController>();
+                bCController.target = _target1;
+                bCController.isGunGenerate = true;
                 blueCharacter.SetActive(true);
+                blueCharacterCount++;
                 break;
             }
         }
     }
+
+    public void OnMultiplierGenerate(Vector3 birthPoint, int amount)
+    {
+        for(int i = 0; i < amount - 1; i++)
+        {
+            foreach (GameObject blueCharacter in _blueCharacterList)
+            {
+                if (!blueCharacter.activeInHierarchy)
+                {
+                    blueCharacter.transform.position = birthPoint;
+
+                    BlueCharacterController bCController = blueCharacter.GetComponent<BlueCharacterController>();
+                    bCController.target = _target1;
+                    blueCharacter.SetActive(true);
+                    blueCharacterCount++;
+                    break;
+                }
+            }
+        }
+        
+    }
+    
 }
