@@ -6,6 +6,7 @@ TagManager:
   tags:
   - wallLeft
   - wallRight
+  - mCGameManager
   layers:
   - Default
   - TransparentFX

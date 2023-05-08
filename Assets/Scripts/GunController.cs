@@ -168,6 +168,7 @@ public class GunController : MonoBehaviour
 
     private void OnTapTriggered()
     {
+        //Debug.Log("GunController, OnTapTriggered");
         _shooting = true;
     }
 }
