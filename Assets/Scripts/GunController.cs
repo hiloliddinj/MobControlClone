@@ -13,7 +13,7 @@ public class GunController : MonoBehaviour
 
     private float _gunAnimeCounter1 = 0.0f, _gunAnimeCounter2 = 0.0f;
     private int _gunAnimeState = 0; // 0 - GoBack, 1 - Shoot, 2 - Go To Init State
-    private int _gunMult = 700;
+    private int _gunMult = 1000;
 
     private int _gunLeftRightMult = 7;
 
@@ -46,7 +46,6 @@ public class GunController : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("OnTriggerEnter");
         if (other.CompareTag(TagConst.wallLeft))
         {
             _canGoLeft = false;
@@ -59,7 +58,6 @@ public class GunController : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        Debug.Log("OnTriggerExit");
         if (other.CompareTag(TagConst.wallLeft))
         {
             _canGoLeft = true;
@@ -138,10 +136,8 @@ public class GunController : MonoBehaviour
 
     private void OnGoLeftTriggered()
     {
-        Debug.Log("OnGoLeftTriggered");
         if (_contrallable && _canGoLeft)
         {
-            //transform.Translate(_gunLeftRightMult * Time.deltaTime * Vector3.left);
             transform.position = Vector3.Lerp(
                 transform.position,
                 new Vector3(
@@ -156,10 +152,8 @@ public class GunController : MonoBehaviour
 
     private void OnGoRightTriggered()
     {
-        Debug.Log("OnGoRightTriggered");
         if (_contrallable && _canGoRight)
         {
-           //transform.Translate(_gunLeftRightMult * Time.deltaTime * Vector3.right);
             transform.position = Vector3.Lerp(
                  transform.position,
                  new Vector3(

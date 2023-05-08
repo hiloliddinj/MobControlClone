@@ -21,7 +21,7 @@ public class UserInputControl : MonoBehaviour
         }
             
 
-        //Touch
+        //Touch - Tap
         foreach (Touch touch in Input.touches)
         {
             if (touch.fingerId == 0)
