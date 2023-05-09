@@ -12,18 +12,15 @@ public class BlueCharacterController : MonoBehaviour
 
     private NavMeshAgent _navMeshAgent;
 
-    private void Awake()
-    {
-        _navMeshAgent = GetComponent<NavMeshAgent>();
-    }
-
     private void Start()
     {
-        MoveAfterGunGenerate();
+        
+        //MoveAfterGunGenerate();
     }
 
-    private void MoveAfterGunGenerate()
+    public void MoveAfterGunGenerate()
     {
+        _navMeshAgent = GetComponent<NavMeshAgent>();
         if (isGunGenerate)
         {
             DOVirtual.DelayedCall(0.5f, () =>
@@ -50,4 +47,10 @@ public class BlueCharacterController : MonoBehaviour
         });
     }
 
+    public void Die()
+    {
+        isGunGenerate = false;
+        collidedToMultiplier = false;
+        gameObject.SetActive(false);
+    }
 }

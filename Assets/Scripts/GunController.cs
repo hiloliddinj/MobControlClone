@@ -7,6 +7,10 @@ public class GunController : MonoBehaviour
     [SerializeField] private GameObject _gunHead;
     [SerializeField] private GameObject _gunCarrier;
     [SerializeField] private Vector3 _startPos;
+
+    [Header("CAMERA ----")]
+    [SerializeField] private Camera _mainCamera;
+
     private bool _shooting = false;
 
     private SkinnedMeshRenderer _gunSkinnedMeshRenderer;
@@ -71,6 +75,8 @@ public class GunController : MonoBehaviour
 
     private void MoveStart()
     {
+        Vector3 cameraOffset = transform.position - _mainCamera.transform.position;
+
         DOVirtual.DelayedCall(0.5f, () => {
             transform.DOMove(_startPos, 2);
             _gunCarrier.transform.DORotate(new Vector3(0, -90, 0), 1.0f);
@@ -78,6 +84,8 @@ public class GunController : MonoBehaviour
             .SetDelay(1.0f).OnComplete(() => {
                 _contrallable = true;
             });
+
+            _mainCamera.transform.DOMoveZ((_startPos - cameraOffset).z, 2);
         });
     }
 
@@ -170,6 +178,7 @@ public class GunController : MonoBehaviour
     private void OnTapTriggered()
     {
         //Debug.Log("GunController, OnTapTriggered");
-        _shooting = true;
+        if (_contrallable) 
+            _shooting = true;
     }
 }

@@ -13,11 +13,13 @@ public class MCGameManager : MonoBehaviour
     private void Start()
     {
         EventManager.current.GunGenerate += OnGunGenerateTriggered;
+        EventManager.current.KillAllCharacters += OnKillAllCharactersTriggered;
     }
 
     private void OnDisable()
     {
         EventManager.current.GunGenerate -= OnGunGenerateTriggered;
+        EventManager.current.KillAllCharacters -= OnKillAllCharactersTriggered;
     }
 
     private void OnGunGenerateTriggered()
@@ -33,6 +35,7 @@ public class MCGameManager : MonoBehaviour
                 bCController.target = _target1;
                 bCController.isGunGenerate = true;
                 blueCharacter.SetActive(true);
+                bCController.MoveAfterGunGenerate();
                 blueCharacterCount++;
                 break;
             }
@@ -52,12 +55,23 @@ public class MCGameManager : MonoBehaviour
                     BlueCharacterController bCController = blueCharacter.GetComponent<BlueCharacterController>();
                     bCController.target = _target1;
                     blueCharacter.SetActive(true);
+                    bCController.MoveAfterGunGenerate();
                     blueCharacterCount++;
                     break;
                 }
             }
         }
-        
     }
-    
+
+    private void OnKillAllCharactersTriggered()
+    {
+        foreach (GameObject blueCharacter in _blueCharacterList)
+        {
+            if (blueCharacter.activeInHierarchy)
+            {
+                BlueCharacterController bCController = blueCharacter.GetComponent<BlueCharacterController>();
+                bCController.Die();
+            }
+        }
+    }
 }

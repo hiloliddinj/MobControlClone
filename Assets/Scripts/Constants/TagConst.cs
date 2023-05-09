@@ -6,4 +6,6 @@ public class TagConst
     public static readonly string wallRight = "wallRight";
 
     public static readonly string blueCharacter = "blueCharacter";
+
+    public static readonly string redHouse = "redHouse";
 }

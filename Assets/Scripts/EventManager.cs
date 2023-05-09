@@ -11,7 +11,7 @@ public class EventManager : MonoBehaviour
 
     public event Action GunGenerate;
 
-    public event Action<int> MultiplierBlueCharacter;
+    public event Action KillAllCharacters;
 
     private void Awake()
     {
@@ -43,8 +43,9 @@ public class EventManager : MonoBehaviour
         GunGenerate?.Invoke();
     }
 
-    public void MultiplierBlueCharacterTrigger(int amount)
+    public void KillAllCharactersTrigger()
     {
-        MultiplierBlueCharacter?.Invoke(amount);
-    } 
+        KillAllCharacters?.Invoke();
+    }
+
 }
