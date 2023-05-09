@@ -9,8 +9,6 @@ public class RedHouseController : MonoBehaviour
     [SerializeField] private ParticleSystem _smallRedPS;
     [SerializeField] private ParticleSystem _firePS;
 
-    [SerializeField] private Rigidbody _rigidBody;
-
     private int amountOnRedHouse = 0;
 
     private void Awake()
@@ -50,17 +48,20 @@ public class RedHouseController : MonoBehaviour
             amountOnRedHouse--;
             _textOnHead.text = amountOnRedHouse.ToString();
             _smallRedPS.Play();
-            //_rigidBody.AddForce(0, 1.0f, 0, ForceMode.Impulse);
 
             if (amountOnRedHouse <= 0)
             {
                 _firePS.Play();
                 gameObject.SetActive(false);
                 EventManager.current.KillAllCharactersTrigger();
+                EventManager.current.BlueScoreIncreaseTrigger(1);
+                EventManager.current.YellowScoreIncreaseTrigger(200);
+                EventManager.current.GoToNextInLevelTrigger();
             }
             else
             {
                 _smallRedPS.Play();
+                EventManager.current.BlueScoreIncreaseTrigger(1);
             }
         }
     }

@@ -13,6 +13,11 @@ public class EventManager : MonoBehaviour
 
     public event Action KillAllCharacters;
 
+    public event Action<int> BlueScoreIncrease;
+    public event Action<int> YellowScoreIncrease;
+
+    public event Action GoToNextInLevel;
+
     private void Awake()
     {
         if (current == null)
@@ -46,6 +51,21 @@ public class EventManager : MonoBehaviour
     public void KillAllCharactersTrigger()
     {
         KillAllCharacters?.Invoke();
+    }
+
+    public void BlueScoreIncreaseTrigger(int amount)
+    {
+        BlueScoreIncrease?.Invoke(amount);
+    }
+
+    public void YellowScoreIncreaseTrigger(int amount)
+    {
+        YellowScoreIncrease?.Invoke(amount);
+    }
+
+    public void GoToNextInLevelTrigger()
+    {
+        GoToNextInLevel?.Invoke();
     }
 
 }

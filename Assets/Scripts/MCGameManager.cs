@@ -1,12 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class MCGameManager : MonoBehaviour
 {
     [SerializeField] private GameObject _target1;
     [SerializeField] private GameObject _birthPoint;
     [SerializeField] private List<GameObject> _blueCharacterList;
+    [SerializeField] private TextMeshProUGUI _blueScoreTMPro;
+    [SerializeField] private TextMeshProUGUI _yellowScoreTMPro;
+
+    private int _blueScore = 0;
+    private int _yellowScore = 0;
 
     public int blueCharacterCount = 0;
 
@@ -14,12 +20,18 @@ public class MCGameManager : MonoBehaviour
     {
         EventManager.current.GunGenerate += OnGunGenerateTriggered;
         EventManager.current.KillAllCharacters += OnKillAllCharactersTriggered;
+        EventManager.current.BlueScoreIncrease += OnBlueScoreIncreased;
+        EventManager.current.YellowScoreIncrease += OnYellowScoreIncreased;
+        EventManager.current.GoToNextInLevel += OnGoToNextInLevelTriggered;
     }
 
     private void OnDisable()
     {
         EventManager.current.GunGenerate -= OnGunGenerateTriggered;
         EventManager.current.KillAllCharacters -= OnKillAllCharactersTriggered;
+        EventManager.current.BlueScoreIncrease += OnBlueScoreIncreased;
+        EventManager.current.YellowScoreIncrease += OnYellowScoreIncreased;
+        EventManager.current.GoToNextInLevel -= OnGoToNextInLevelTriggered;
     }
 
     private void OnGunGenerateTriggered()
@@ -74,4 +86,22 @@ public class MCGameManager : MonoBehaviour
             }
         }
     }
+
+    private void OnBlueScoreIncreased(int amount)
+    {
+        _blueScore += amount;
+        _blueScoreTMPro.text = _blueScore.ToString();
+    }
+
+    private void OnYellowScoreIncreased(int amount)
+    {
+        _yellowScore += amount;
+        _yellowScoreTMPro.text = _yellowScore.ToString();
+    }
+
+    private void OnGoToNextInLevelTriggered()
+    {
+        //Do Something;
+    }
+
 }

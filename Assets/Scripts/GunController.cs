@@ -31,6 +31,7 @@ public class GunController : MonoBehaviour
         EventManager.current.GoLeft += OnGoLeftTriggered;
         EventManager.current.GoRight += OnGoRightTriggered;
         EventManager.current.Tap += OnTapTriggered;
+        EventManager.current.GoToNextInLevel += OnGoToNextInLevelTriggered;
 
         _gunSkinnedMeshRenderer = _gunHead.GetComponent<SkinnedMeshRenderer>();
         MoveStart();
@@ -41,6 +42,7 @@ public class GunController : MonoBehaviour
         EventManager.current.GoLeft -= OnGoLeftTriggered;
         EventManager.current.GoRight -= OnGoRightTriggered;
         EventManager.current.Tap -= OnTapTriggered;
+        EventManager.current.GoToNextInLevel -= OnGoToNextInLevelTriggered;
     }
 
     private void Update()
@@ -180,5 +182,10 @@ public class GunController : MonoBehaviour
         //Debug.Log("GunController, OnTapTriggered");
         if (_contrallable) 
             _shooting = true;
+    }
+
+    private void OnGoToNextInLevelTriggered()
+    {
+        _contrallable = false;
     }
 }
