@@ -1,3 +1,4 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 
@@ -27,6 +28,8 @@ public class GunController : MonoBehaviour
     private bool _contrallable = false;
     private bool _canGoLeft = true;
     private bool _canGoRight = true;
+
+    private int _platformDegree = 0;
 
 
     private void Start()
@@ -154,14 +157,24 @@ public class GunController : MonoBehaviour
     {
         if (_contrallable && _canGoLeft)
         {
-            transform.position = Vector3.Lerp(
-                transform.position,
-                new Vector3(
-                    transform.position.x - _gunLeftRightMult * Time.deltaTime,
+            double value = _gunLeftRightMult * Time.deltaTime;
+            Vector3 moveDirection = new Vector3(
+                    transform.position.x - (float)value,
                     transform.position.y,
                     transform.position.z
-                    ), 03f
-                );
+                    );
+
+            if (_platformDegree == 45)
+            {
+                value *= Math.Sqrt(2);
+                moveDirection = new Vector3(
+                    transform.position.x - (float)value,
+                    transform.position.y,
+                    transform.position.z + (float)value
+                    );
+            } 
+            transform.position = Vector3.Lerp(
+                transform.position, moveDirection, 03f);
         }
             
     }
@@ -170,16 +183,54 @@ public class GunController : MonoBehaviour
     {
         if (_contrallable && _canGoRight)
         {
+            double value = _gunLeftRightMult * Time.deltaTime;
+            Vector3 moveDirection = new Vector3(
+                    transform.position.x + (float)value,
+                    transform.position.y,
+                    transform.position.z
+                    );
+
+            if (_platformDegree == 45)
+            {
+                value *= Math.Sqrt(2);
+                moveDirection = new Vector3(
+                    transform.position.x + (float)value,
+                    transform.position.y,
+                    transform.position.z - (float)value
+                    );
+            }
+
             transform.position = Vector3.Lerp(
-                 transform.position,
-                 new Vector3(
-                     transform.position.x + _gunLeftRightMult * Time.deltaTime,
-                     transform.position.y,
-                     transform.position.z
-                     ), 03f
-                 );
+                transform.position, moveDirection, 03f);
+        }     
+    }
+
+    private void ControlGun(bool isLeft)
+    {
+        int dir = 1;
+        if (isLeft) dir = -1;
+
+        if (_contrallable && _canGoLeft)
+        {
+            double value = _gunLeftRightMult * Time.deltaTime;
+            Vector3 moveDirection = new Vector3(
+                    transform.position.x - (float)value * dir,
+                    transform.position.y,
+                    transform.position.z
+                    );
+
+            if (_platformDegree == 45)
+            {
+                value *= Math.Sqrt(2);
+                moveDirection = new Vector3(
+                    transform.position.x - (float)value * dir,
+                    transform.position.y,
+                    transform.position.z + (float)value * dir
+                    );
+            }
+            transform.position = Vector3.Lerp(
+                transform.position, moveDirection, 03f);
         }
-            
     }
 
     private void OnTapTriggered()
@@ -210,29 +261,16 @@ public class GunController : MonoBehaviour
                         _mainCamera.transform.DOMoveZ((_circleRed1).z, 0.5f);
                         _mainCamera.transform.DORotate(new Vector3(45, 45, 0), 0.5f);
                     });
-                    //_mainCamera.transform.DOMoveZ((_circleRed1).z, 0.5f).SetDelay(1.0f).OnComplete(() => {
-                    //    _mainCamera.transform.DORotate(new Vector3(45, 45, 0), 0.5f);
-                    //});
                     transform.DORotate(new Vector3(0, 45, 0), 0.5f).OnComplete(() => {
                         //GO To new destinoation
                         transform.DOMove(_shootPoz2, 2);
-                        _gunCarrier.transform.DORotate(new Vector3(0, -90 - 45, 0), 1.0f).SetDelay(1.0f);
+                        _gunCarrier.transform.DORotate(new Vector3(0, -90 - 45, 0), 1.0f)
+                        .SetDelay(1.0f).OnComplete(() => {
+                            _platformDegree = 45;
+                            _contrallable = true;
+                        });
                     });
-                });
-
-                //_gunHead.transform.DORotate(new Vector3(0, 45, 0), 1.0f);
-                //_gunCarrier.transform.DORotate(new Vector3(0, -45, 0), 1.0f)
-                //.SetDelay(4.0f).OnComplete(() => {
-                //    transform.DORotate(new Vector3(0, 45, 0), 1.0f).OnComplete(() => {
-                //        transform.DOMove(_shootPoz2, 2);
-                //        _gunHead.transform.DORotate(new Vector3(0, 45 + 90, 0), 1.0f).SetDelay(1.0f).OnComplete(() => {
-                //            _contrallable = true;
-                //        });
-                //    });
-                    
-                //});
-
-                
+                });  
             });
         });
     }
