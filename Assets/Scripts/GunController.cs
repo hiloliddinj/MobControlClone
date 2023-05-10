@@ -6,10 +6,13 @@ public class GunController : MonoBehaviour
     [Header("GUN PARTS ----")]
     [SerializeField] private GameObject _gunHead;
     [SerializeField] private GameObject _gunCarrier;
-    [SerializeField] private Vector3 _startPos;
 
     [Header("CAMERA ----")]
     [SerializeField] private Camera _mainCamera;
+
+    private Vector3 _startPos = new Vector3(10.89f, 1.013f, 1.98f);
+    private Vector3 _circleRed1 = new Vector3(10.89f, 1.013f, 24.71f);
+    private Vector3 _shootPoz2 = new Vector3(14.91f, 1.013f, 28.73f);
 
     private bool _shooting = false;
 
@@ -77,17 +80,19 @@ public class GunController : MonoBehaviour
 
     private void MoveStart()
     {
-        Vector3 cameraOffset = transform.position - _mainCamera.transform.position;
+        Vector3 camerafOffset = transform.position - _mainCamera.transform.position;
 
-        DOVirtual.DelayedCall(0.5f, () => {
+        DOVirtual.DelayedCall(0.5f, () =>
+        {
             transform.DOMove(_startPos, 2);
             _gunCarrier.transform.DORotate(new Vector3(0, -90, 0), 1.0f);
             _gunCarrier.transform.DORotate(new Vector3(0, 0, 0), 1.0f)
-            .SetDelay(1.0f).OnComplete(() => {
+            .SetDelay(1.0f).OnComplete(() =>
+            {
                 _contrallable = true;
             });
 
-            _mainCamera.transform.DOMoveZ((_startPos - cameraOffset).z, 2);
+            _mainCamera.transform.DOMoveZ((_startPos - camerafOffset).z, 2);
         });
     }
 
@@ -187,5 +192,48 @@ public class GunController : MonoBehaviour
     private void OnGoToNextInLevelTriggered()
     {
         _contrallable = false;
+        Move1();
+    }
+
+    private void Move1()
+    {
+        Vector3 camerafOffset = transform.position - _mainCamera.transform.position;
+
+        DOVirtual.DelayedCall(0.5f, () => {
+            transform.DOMove(_startPos, 1).OnComplete(() => {
+                //Go Streihgt
+                _mainCamera.transform.DOMoveZ((_circleRed1 - camerafOffset).z, 5);
+                _gunCarrier.transform.DORotate(new Vector3(0, -90, 0), 1.0f);
+                transform.DOMove(_circleRed1, 5).OnComplete(() => {
+                    //Rotate 45 degrees
+                    DOVirtual.DelayedCall(1.0f, () => {
+                        _mainCamera.transform.DOMoveZ((_circleRed1).z, 0.5f);
+                        _mainCamera.transform.DORotate(new Vector3(45, 45, 0), 0.5f);
+                    });
+                    //_mainCamera.transform.DOMoveZ((_circleRed1).z, 0.5f).SetDelay(1.0f).OnComplete(() => {
+                    //    _mainCamera.transform.DORotate(new Vector3(45, 45, 0), 0.5f);
+                    //});
+                    transform.DORotate(new Vector3(0, 45, 0), 0.5f).OnComplete(() => {
+                        //GO To new destinoation
+                        transform.DOMove(_shootPoz2, 2);
+                        _gunCarrier.transform.DORotate(new Vector3(0, -90 - 45, 0), 1.0f).SetDelay(1.0f);
+                    });
+                });
+
+                //_gunHead.transform.DORotate(new Vector3(0, 45, 0), 1.0f);
+                //_gunCarrier.transform.DORotate(new Vector3(0, -45, 0), 1.0f)
+                //.SetDelay(4.0f).OnComplete(() => {
+                //    transform.DORotate(new Vector3(0, 45, 0), 1.0f).OnComplete(() => {
+                //        transform.DOMove(_shootPoz2, 2);
+                //        _gunHead.transform.DORotate(new Vector3(0, 45 + 90, 0), 1.0f).SetDelay(1.0f).OnComplete(() => {
+                //            _contrallable = true;
+                //        });
+                //    });
+                    
+                //});
+
+                
+            });
+        });
     }
 }
