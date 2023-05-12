@@ -12,26 +12,21 @@ public class BlueCharacterController : MonoBehaviour
 
     private NavMeshAgent _navMeshAgent;
 
-    private void Start()
-    {
-        
-        //MoveAfterGunGenerate();
-    }
-
     public void MoveAfterGunGenerate()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
         if (isGunGenerate)
         {
+            transform.DOMove(new Vector3(
+                transform.position.x,
+                transform.position.y - 0.6f,
+                transform.position.z + 2), 0.5f);
+
             DOVirtual.DelayedCall(0.5f, () =>
             {
                 _navMeshAgent.SetDestination(target.transform.position);
             });
 
-            transform.DOMove(new Vector3(
-                transform.position.x,
-                transform.position.y - 0.6f,
-                transform.position.z + 2), 0.5f);
         } else
         {
             _navMeshAgent.SetDestination(target.transform.position);

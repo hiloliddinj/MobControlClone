@@ -2397,6 +2397,7 @@ GameObject:
   - component: {fileID: 8196084759770064736}
   - component: {fileID: 2836840598708403482}
   - component: {fileID: 8645308659733158256}
+  - component: {fileID: 1841227514226121504}
   m_Layer: 0
   m_Name: YellowCharacter
   m_TagString: Untagged
@@ -2460,6 +2461,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 85c76a536909a40e8b2b0d5704a03d84, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!195 &1841227514226121504
+NavMeshAgent:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8860136304271572442}
+  m_Enabled: 1
+  m_AgentTypeID: 0
+  m_Radius: 0.5
+  m_Speed: 2
+  m_Acceleration: 500
+  avoidancePriority: 50
+  m_AngularSpeed: 180
+  m_StoppingDistance: 0.2
+  m_AutoTraverseOffMeshLink: 1
+  m_AutoBraking: 1
+  m_AutoRepath: 1
+  m_Height: 2
+  m_BaseOffset: 0
+  m_WalkableMask: 4294967295
+  m_ObstacleAvoidanceType: 4
 --- !u!1 &8864551772015390082
 GameObject:
   m_ObjectHideFlags: 0

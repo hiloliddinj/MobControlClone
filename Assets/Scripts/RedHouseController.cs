@@ -11,7 +11,7 @@ public class RedHouseController : MonoBehaviour
 
     private int amountOnRedHouse = 0;
 
-    private void Awake()
+    private void Start()
     {
         amountOnRedHouse = int.Parse(gameObject.name);
         _textOnHead.text = amountOnRedHouse.ToString();

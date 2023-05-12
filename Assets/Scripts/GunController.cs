@@ -31,7 +31,6 @@ public class GunController : MonoBehaviour
 
     private int _platformDegree = 0;
 
-
     private void Start()
     {
         EventManager.current.GoLeft += OnGoLeftTriggered;
@@ -132,6 +131,8 @@ public class GunController : MonoBehaviour
                     _gunAnimeState = 2;
                     /// Generate character!
                     EventManager.current.GunGenerateTrigger();
+
+
                 }
             }
             else if (_gunAnimeState == 2 && _gunAnimeCounter2 > 0)
