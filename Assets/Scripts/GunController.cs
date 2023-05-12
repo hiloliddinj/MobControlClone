@@ -236,7 +236,6 @@ public class GunController : MonoBehaviour
 
     private void OnTapTriggered()
     {
-        //Debug.Log("GunController, OnTapTriggered");
         if (_contrallable) 
             _shooting = true;
     }
@@ -244,34 +243,42 @@ public class GunController : MonoBehaviour
     private void OnGoToNextInLevelTriggered()
     {
         _contrallable = false;
-        Move1();
+        DOVirtual.DelayedCall(0.5f, () => {
+            if (MCGameManager.level1Steps == 1)
+            {
+                MoveStreightAndLeft();
+            } else if (MCGameManager.level1Steps == 2)
+            {
+                //MoveStart different!
+            }
+        });
+        
+        
     }
 
-    private void Move1()
+    private void MoveStreightAndLeft()
     {
         Vector3 camerafOffset = transform.position - _mainCamera.transform.position;
 
-        DOVirtual.DelayedCall(0.5f, () => {
-            transform.DOMove(_startPos, 1).OnComplete(() => {
-                //Go Streihgt
-                _mainCamera.transform.DOMoveZ((_circleRed1 - camerafOffset).z, 5);
-                _gunCarrier.transform.DORotate(new Vector3(0, -90, 0), 1.0f);
-                transform.DOMove(_circleRed1, 5).OnComplete(() => {
-                    //Rotate 45 degrees
-                    DOVirtual.DelayedCall(1.0f, () => {
-                        _mainCamera.transform.DOMoveZ((_circleRed1).z, 0.5f);
-                        _mainCamera.transform.DORotate(new Vector3(45, 45, 0), 0.5f);
+        transform.DOMove(_startPos, 1).OnComplete(() => {
+            //Go Streihgt
+            _mainCamera.transform.DOMoveZ((_circleRed1 - camerafOffset).z, 5);
+            _gunCarrier.transform.DORotate(new Vector3(0, -90, 0), 1.0f);
+            transform.DOMove(_circleRed1, 5).OnComplete(() => {
+                //Rotate 45 degrees
+                DOVirtual.DelayedCall(1.0f, () => {
+                    _mainCamera.transform.DOMoveZ((_circleRed1).z, 0.5f);
+                    _mainCamera.transform.DORotate(new Vector3(45, 45, 0), 0.5f);
+                });
+                transform.DORotate(new Vector3(0, 45, 0), 0.5f).OnComplete(() => {
+                    //GO To new destinoation
+                    transform.DOMove(_shootPoz2, 2);
+                    _gunCarrier.transform.DORotate(new Vector3(0, -90 - 45, 0), 1.0f)
+                    .SetDelay(1.0f).OnComplete(() => {
+                        _platformDegree = 45;
+                        _contrallable = true;
                     });
-                    transform.DORotate(new Vector3(0, 45, 0), 0.5f).OnComplete(() => {
-                        //GO To new destinoation
-                        transform.DOMove(_shootPoz2, 2);
-                        _gunCarrier.transform.DORotate(new Vector3(0, -90 - 45, 0), 1.0f)
-                        .SetDelay(1.0f).OnComplete(() => {
-                            _platformDegree = 45;
-                            _contrallable = true;
-                        });
-                    });
-                });  
+                });
             });
         });
     }

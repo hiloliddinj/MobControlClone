@@ -6,7 +6,7 @@ using UnityEngine.AI;
 
 public class YellowCharacterController : MonoBehaviour
 {
-    public GameObject target;
+    public Vector3 target;
     public bool isGunGenerate = false;
     public bool collidedToMultiplier = false;
 
@@ -23,19 +23,29 @@ public class YellowCharacterController : MonoBehaviour
         _navMeshAgent = GetComponent<NavMeshAgent>();
         if (isGunGenerate)
         {
-            transform.DOMove(new Vector3(
+            Vector3 jumpVector = new Vector3(
                 transform.position.x,
                 transform.position.y - 0.6f,
-                transform.position.z + 2), 0.5f);
+                transform.position.z + 2);
+
+            if (MCGameManager.level1Steps > 0)
+            {
+                jumpVector = new Vector3(
+                transform.position.x + 1.414f,
+                transform.position.y - 0.6f,
+                transform.position.z + 1.414f);
+            }
+
+            transform.DOMove(jumpVector, 0.5f);
 
             DOVirtual.DelayedCall(0.5f, () =>
             {
-                _navMeshAgent.SetDestination(target.transform.position);
+                _navMeshAgent.SetDestination(target);
             });
         }
         else
         {
-            _navMeshAgent.SetDestination(target.transform.position);
+            _navMeshAgent.SetDestination(target);
         }
     }
 

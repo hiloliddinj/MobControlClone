@@ -7,7 +7,8 @@ using TMPro;
 public class MCGameManager : MonoBehaviour
 {
     [Header("-> TARGETS ")]
-    [SerializeField] private GameObject _target1;
+    [SerializeField] private Vector3 _target1;
+    [SerializeField] private Vector3 _target2;
     [SerializeField] private GameObject _birthPoint;
 
     [Header("-> CHARACTERS")]
@@ -24,10 +25,14 @@ public class MCGameManager : MonoBehaviour
     private int _blueScore = 0;
     private int _yellowScore = 0;
 
-    public int blueCharacterCount = 0;
-    public int yellowCharacterCount = 0;
-
     private int _gunGeneratedBlueCharacterCount = 0;
+
+    private Vector3 _targetOfNavmeshes;
+
+    private int blueCharacterCount = 0;
+    private int yellowCharacterCount = 0;
+
+    public static int level1Steps = 0;
 
     private void Start()
     {
@@ -36,6 +41,8 @@ public class MCGameManager : MonoBehaviour
         EventManager.current.BlueScoreIncrease += OnBlueScoreIncreased;
         EventManager.current.YellowScoreIncrease += OnYellowScoreIncreased;
         EventManager.current.GoToNextInLevel += OnGoToNextInLevelTriggered;
+
+        _targetOfNavmeshes = _target1;
 
         _gunBlueIndicatorSlider.value = 0;
         _gunBlueIndicatorSlider.maxValue = 25;
@@ -61,8 +68,10 @@ public class MCGameManager : MonoBehaviour
                     blueCharacter.transform.position = _birthPoint.transform.position;
 
                     BlueCharacterController bCController = blueCharacter.GetComponent<BlueCharacterController>();
-                    bCController.target = _target1;
+                    bCController.target = _targetOfNavmeshes;
                     bCController.isGunGenerate = true;
+                    if (level1Steps > 0)
+                        blueCharacter.transform.rotation = Quaternion.Euler(0, 45, 0);
                     blueCharacter.SetActive(true);
                     bCController.MoveAfterGunGenerate();
                     blueCharacterCount++;
@@ -80,8 +89,12 @@ public class MCGameManager : MonoBehaviour
                     yellowCharacter.transform.position = _birthPoint.transform.position;
 
                     YellowCharacterController yCController = yellowCharacter.GetComponent<YellowCharacterController>();
-                    yCController.target = _target1;
+                    yCController.target = _targetOfNavmeshes;
                     yCController.isGunGenerate = true;
+                    if (level1Steps == 0)
+                        yellowCharacter.transform.rotation = Quaternion.Euler(0, 0, 0);
+                    else
+                        yellowCharacter.transform.rotation = Quaternion.Euler(0, 45, 0);
                     yellowCharacter.SetActive(true);
                     yCController.MoveAfterGunGenerate();
                     yellowCharacterCount++;
@@ -106,7 +119,9 @@ public class MCGameManager : MonoBehaviour
                     blueCharacter.transform.position = birthPoint;
 
                     BlueCharacterController bCController = blueCharacter.GetComponent<BlueCharacterController>();
-                    bCController.target = _target1;
+                    bCController.target = _targetOfNavmeshes;
+                    if (level1Steps>0)
+                        blueCharacter.transform.rotation = Quaternion.Euler(0, 45, 0);
                     blueCharacter.SetActive(true);
                     bCController.MoveAfterGunGenerate();
                     blueCharacterCount++;
@@ -118,12 +133,23 @@ public class MCGameManager : MonoBehaviour
 
     private void OnKillAllCharactersTriggered()
     {
+        //Kill All Blues
         foreach (GameObject blueCharacter in _blueCharacterList)
         {
             if (blueCharacter.activeInHierarchy)
             {
                 BlueCharacterController bCController = blueCharacter.GetComponent<BlueCharacterController>();
                 bCController.Die();
+            }
+        }
+
+        //Kill All Yellows
+        foreach (GameObject yellowCharacter in _yellowCharacterList)
+        {
+            if (yellowCharacter.activeInHierarchy)
+            {
+                YellowCharacterController yCController = yellowCharacter.GetComponent<YellowCharacterController>();
+                yCController.Die();
             }
         }
     }
@@ -142,7 +168,10 @@ public class MCGameManager : MonoBehaviour
 
     private void OnGoToNextInLevelTriggered()
     {
-        //Do Something;
+        blueCharacterCount = 0;
+        yellowCharacterCount = 0;
+        _targetOfNavmeshes = _target2;
+        level1Steps++;
     }
 
 }

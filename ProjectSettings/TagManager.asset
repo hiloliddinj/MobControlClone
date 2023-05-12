@@ -9,6 +9,7 @@ TagManager:
   - mCGameManager
   - blueCharacter
   - redHouse
+  - yellowCharacter
   layers:
   - Default
   - TransparentFX

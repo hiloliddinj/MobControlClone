@@ -17,29 +17,6 @@ public class RedHouseController : MonoBehaviour
         _textOnHead.text = amountOnRedHouse.ToString();
     }
 
-    //private void OnTriggerEnter(Collider other)
-    //{
-    //    if (other.CompareTag(TagConst.blueCharacter))
-    //    {
-    //        other.gameObject.GetComponent<BlueCharacterController>().Die();
-    //        amountOnRedHouse--;
-    //        _textOnHead.text = amountOnRedHouse.ToString();
-    //        _smallRedPS.Play();
-    //        _rigidBody.AddForce(0, 1.0f, 0, ForceMode.Impulse);
-
-    //        if (amountOnRedHouse <= 0)
-    //        {
-    //            _firePS.Play();
-    //            gameObject.SetActive(false);
-    //            EventManager.current.KillAllCharactersTrigger();
-    //        } else
-    //        {
-    //            _smallRedPS.Play();
-    //        }
-    //    }
-
-    //}
-
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag(TagConst.blueCharacter))
@@ -62,6 +39,31 @@ public class RedHouseController : MonoBehaviour
             {
                 _smallRedPS.Play();
                 EventManager.current.BlueScoreIncreaseTrigger(1);
+            }
+        }
+        else if (collision.gameObject.CompareTag(TagConst.yellowCharacter))
+        {
+            collision.gameObject.GetComponent<YellowCharacterController>().Die();
+            if (amountOnRedHouse >= 2)
+                amountOnRedHouse -= 2;
+            else
+                amountOnRedHouse --;
+            _textOnHead.text = amountOnRedHouse.ToString();
+            _smallRedPS.Play();
+
+            if (amountOnRedHouse <= 0)
+            {
+                _firePS.Play();
+                gameObject.SetActive(false);
+                EventManager.current.KillAllCharactersTrigger();
+                EventManager.current.BlueScoreIncreaseTrigger(2);
+                EventManager.current.YellowScoreIncreaseTrigger(200);
+                EventManager.current.GoToNextInLevelTrigger();
+            }
+            else
+            {
+                _smallRedPS.Play();
+                EventManager.current.BlueScoreIncreaseTrigger(2);
             }
         }
     }
