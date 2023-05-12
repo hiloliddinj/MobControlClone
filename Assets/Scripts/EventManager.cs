@@ -18,7 +18,8 @@ public class EventManager : MonoBehaviour
 
     public event Action GoToNextInLevel;
 
-    public event Action Trigger1;
+    public event Action TriggerLeft;
+    public event Action TriggerRight;
 
     private void Awake()
     {
@@ -70,9 +71,14 @@ public class EventManager : MonoBehaviour
         GoToNextInLevel?.Invoke();
     }
 
-    public void Trigger1Trigger()
+    public void TriggerLeftTrigger()
     {
-        Trigger1?.Invoke();
+        TriggerLeft?.Invoke();
+    }
+
+    public void TriggerRightTrigger()
+    {
+        TriggerRight?.Invoke();
     }
 
 }

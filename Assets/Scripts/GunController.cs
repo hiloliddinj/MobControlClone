@@ -12,8 +12,9 @@ public class GunController : MonoBehaviour
     [SerializeField] private Camera _mainCamera;
 
     private Vector3 _startPos = new Vector3(10.89f, 1.013f, 1.98f);
-    private Vector3 _circleRed1 = new Vector3(10.89f, 1.013f, 24.71f);
+    private Vector3 _circleRed2 = new Vector3(10.89f, 1.013f, 24.71f);
     private Vector3 _shootPoz2 = new Vector3(14.91f, 1.013f, 28.73f);
+    private Vector3 _shootPoz3 = new(35.45f, 1.013f, 49.06f);
 
     private bool _shooting = false;
 
@@ -64,6 +65,15 @@ public class GunController : MonoBehaviour
         else if (other.CompareTag(TagConst.wallRight))
         {
             _canGoRight = false;
+        }
+
+        else if (other.CompareTag(TagConst.triggerLeft))
+        {
+            EventManager.current.TriggerLeftTrigger();
+        }
+        else if (other.CompareTag(TagConst.triggerRight))
+        {
+            EventManager.current.TriggerRightTrigger();
         }
     }
 
@@ -167,7 +177,7 @@ public class GunController : MonoBehaviour
 
             if (_platformDegree == 45)
             {
-                value *= Math.Sqrt(2);
+                value /= 1.414f;
                 moveDirection = new Vector3(
                     transform.position.x - (float)value,
                     transform.position.y,
@@ -193,7 +203,7 @@ public class GunController : MonoBehaviour
 
             if (_platformDegree == 45)
             {
-                value *= Math.Sqrt(2);
+                value /= 1.414f;
                 moveDirection = new Vector3(
                     transform.position.x + (float)value,
                     transform.position.y,
@@ -249,7 +259,7 @@ public class GunController : MonoBehaviour
                 MoveStreightAndLeft();
             } else if (MCGameManager.level1Steps == 2)
             {
-                //MoveStart different!
+                MovePart3();
             }
         });
         
@@ -262,13 +272,13 @@ public class GunController : MonoBehaviour
 
         transform.DOMove(_startPos, 1).OnComplete(() => {
             //Go Streihgt
-            _mainCamera.transform.DOMoveZ((_circleRed1 - camerafOffset).z, 5);
+            _mainCamera.transform.DOMoveZ((_circleRed2 - camerafOffset).z, 5);
             _gunCarrier.transform.DORotate(new Vector3(0, -90, 0), 1.0f);
-            transform.DOMove(_circleRed1, 5).OnComplete(() => {
+            transform.DOMove(_circleRed2, 5).OnComplete(() => {
                 //Rotate 45 degrees
                 DOVirtual.DelayedCall(1.0f, () => {
-                    _mainCamera.transform.DOMoveZ((_circleRed1).z, 0.5f);
-                    _mainCamera.transform.DORotate(new Vector3(45, 45, 0), 0.5f);
+                    _mainCamera.transform.DOMoveZ((_circleRed2).z, 0.5f);
+                    _mainCamera.transform.DORotate(new(45, 45, 0), 0.5f);
                 });
                 transform.DORotate(new Vector3(0, 45, 0), 0.5f).OnComplete(() => {
                     //GO To new destinoation
@@ -280,6 +290,20 @@ public class GunController : MonoBehaviour
                     });
                 });
             });
+        });
+    }
+
+    private void MovePart3()
+    {
+        Vector3 camerafOffset = transform.position - _mainCamera.transform.position;
+
+        transform.DOMove(_shootPoz2, 0.3f).OnComplete(() => {
+            _mainCamera.transform.DOMove((_shootPoz3 - camerafOffset), 5f);
+            transform.DOMove(_shootPoz3, 5).OnComplete(() => {
+                _contrallable = true;
+            });
+            _gunCarrier.transform.DORotate(new Vector3(0, -45, 0), 1.0f);
+            _gunCarrier.transform.DORotate(new Vector3(0, -90 - 45, 0), 1.0f).SetDelay(4.0f);
         });
     }
 }

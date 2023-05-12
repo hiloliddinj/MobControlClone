@@ -14,7 +14,8 @@ public class RedCharacterController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        _navMeshAgent.SetDestination(_targetTransform.position);
+        if (gameObject.activeInHierarchy)
+            _navMeshAgent.SetDestination(_targetTransform.position);
     }
 
 }

@@ -11,5 +11,6 @@ public class TagConst
 
     public static readonly string redHouse = "redHouse";
 
-    public static readonly string trigger1 = "trigger1";
+    public static readonly string triggerLeft = "triggerLeft";
+    public static readonly string triggerRight = "triggerRight";
 }

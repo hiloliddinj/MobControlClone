@@ -10,6 +10,8 @@ public class MCGameManager : MonoBehaviour
     [Header("-> TARGETS ")]
     [SerializeField] private Vector3 _target1;
     [SerializeField] private Vector3 _target2;
+    [SerializeField] private Vector3 _target3L;
+    [SerializeField] private Vector3 _target3R;
     [SerializeField] private GameObject _birthPoint;
 
     [Header("-> CHARACTERS")]
@@ -29,7 +31,7 @@ public class MCGameManager : MonoBehaviour
 
     private int _gunGeneratedBlueCharacterCount = 0;
 
-    private Vector3 _targetOfNavmeshes;
+    private Vector3 _targetOfNavMeshes;
 
     private int blueCharacterCount = 0;
     private int yellowCharacterCount = 0;
@@ -37,6 +39,7 @@ public class MCGameManager : MonoBehaviour
     public static int level1Steps = 0;
 
     public static bool _trigger1Triggered = false;
+    public static bool _trigger2Triggered = false;
 
     private void Start()
     {
@@ -45,8 +48,10 @@ public class MCGameManager : MonoBehaviour
         EventManager.current.BlueScoreIncrease += OnBlueScoreIncreased;
         EventManager.current.YellowScoreIncrease += OnYellowScoreIncreased;
         EventManager.current.GoToNextInLevel += OnGoToNextInLevelTriggered;
+        EventManager.current.TriggerLeft += OnTriggerLeftTriggered;
+        EventManager.current.TriggerRight += OnTriggerRightTriggered;
 
-        _targetOfNavmeshes = _target1;
+        _targetOfNavMeshes = _target1;
 
         _gunBlueIndicatorSlider.value = 0;
         _gunBlueIndicatorSlider.maxValue = 25;
@@ -59,6 +64,7 @@ public class MCGameManager : MonoBehaviour
         EventManager.current.BlueScoreIncrease += OnBlueScoreIncreased;
         EventManager.current.YellowScoreIncrease += OnYellowScoreIncreased;
         EventManager.current.GoToNextInLevel -= OnGoToNextInLevelTriggered;
+        EventManager.current.TriggerLeft -= OnTriggerLeftTriggered;
     }
 
     private void OnGunGenerateTriggered()
@@ -72,7 +78,7 @@ public class MCGameManager : MonoBehaviour
                     blueCharacter.transform.position = _birthPoint.transform.position;
 
                     BlueCharacterController bCController = blueCharacter.GetComponent<BlueCharacterController>();
-                    bCController.target = _targetOfNavmeshes;
+                    bCController.target = _targetOfNavMeshes;
                     bCController.isGunGenerate = true;
                     if (level1Steps == 0)
                         blueCharacter.transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -86,10 +92,15 @@ public class MCGameManager : MonoBehaviour
                             DOVirtual.DelayedCall(6.0f, () => {
                                 GenerateReds();
                             });
-                        }    
+                        }
+                        else if (level1Steps == 2 && !_trigger2Triggered) {
+                            _trigger2Triggered = true;
+                            DOVirtual.DelayedCall(6.0f, () => {
+                                GenerateReds();
+                            });
+                        }
                     }
-
-                        
+  
                     blueCharacter.SetActive(true);
                     bCController.MoveAfterGunGenerate();
                     blueCharacterCount++;
@@ -107,7 +118,7 @@ public class MCGameManager : MonoBehaviour
                     yellowCharacter.transform.position = _birthPoint.transform.position;
 
                     YellowCharacterController yCController = yellowCharacter.GetComponent<YellowCharacterController>();
-                    yCController.target = _targetOfNavmeshes;
+                    yCController.target = _targetOfNavMeshes;
                     yCController.isGunGenerate = true;
                     if (level1Steps == 0)
                         yellowCharacter.transform.rotation = Quaternion.Euler(0, 0, 0);
@@ -139,7 +150,7 @@ public class MCGameManager : MonoBehaviour
                         blueCharacter.transform.position = birthPoint;
 
                         BlueCharacterController bCController = blueCharacter.GetComponent<BlueCharacterController>();
-                        bCController.target = _targetOfNavmeshes;
+                        bCController.target = _targetOfNavMeshes;
                         if (level1Steps == 0)
                             blueCharacter.transform.rotation = Quaternion.Euler(0, 0, 0);
                         else
@@ -160,7 +171,7 @@ public class MCGameManager : MonoBehaviour
                         yellowCharacter.transform.position = birthPoint;
 
                         YellowCharacterController yCController = yellowCharacter.GetComponent<YellowCharacterController>();
-                        yCController.target = _targetOfNavmeshes;
+                        yCController.target = _targetOfNavMeshes;
                         if (level1Steps == 0)
                             yellowCharacter.transform.rotation = Quaternion.Euler(0, 0, 0);
                         else
@@ -197,6 +208,15 @@ public class MCGameManager : MonoBehaviour
                 yCController.Die();
             }
         }
+
+        //Kill All Reds
+        foreach (GameObject redCharacter in _redCharacterList)
+        {
+            if (redCharacter.activeInHierarchy)
+            {
+                redCharacter.SetActive(false);
+            }
+        }
     }
 
     private void OnBlueScoreIncreased(int amount)
@@ -213,10 +233,20 @@ public class MCGameManager : MonoBehaviour
 
     private void OnGoToNextInLevelTriggered()
     {
+        Debug.Log("MCGameManager, OnGoToNextInLevelTriggered");
         blueCharacterCount = 0;
         yellowCharacterCount = 0;
-        _targetOfNavmeshes = _target2;
-        level1Steps++;
+        if (level1Steps < 2) 
+            level1Steps++;
+        if (level1Steps == 1)
+        {
+            _targetOfNavMeshes = _target2;
+        }
+        else if (level1Steps == 2)
+        {
+            Debug.Log("MCGameManager, OnGoToNextInLevelTriggered, level1Steps = " + level1Steps);
+            _targetOfNavMeshes = _target3L;
+        }
     }
 
     private void GenerateReds()
@@ -227,24 +257,78 @@ public class MCGameManager : MonoBehaviour
             while (count > 0)
             {
                 DOVirtual.DelayedCall(0.3f, () => {
-                    int counter = 4;
-                    foreach (GameObject redChar in _redCharacterList)
+                    
+
+                    if (level1Steps == 1)
                     {
-                        if (!redChar.activeInHierarchy)
+                        int counter = 4;
+                        foreach (GameObject redChar in _redCharacterList)
                         {
-                            redChar.transform.position = _target2;
-                            if (level1Steps == 0)
-                                redChar.transform.rotation = Quaternion.Euler(0, 180, 0);
-                            else
-                                redChar.transform.rotation = Quaternion.Euler(0, 180 + 45, 0);
-                            redChar.SetActive(true);
-                            counter--;
-                            if (counter == 0) break;
+                            if (!redChar.activeInHierarchy)
+                            {
+                                redChar.transform.position = _target2;
+                                if (level1Steps == 0)
+                                    redChar.transform.rotation = Quaternion.Euler(0, 180, 0);
+                                else
+                                    redChar.transform.rotation = Quaternion.Euler(0, 180 + 45, 0);
+                                redChar.SetActive(true);
+                                counter--;
+                                if (counter == 0) break;
+                            }
                         }
                     }
+                    else if (level1Steps == 2)
+                    {
+                        int counterL = 4;
+                        foreach (GameObject redChar in _redCharacterList)
+                        {
+                            if (!redChar.activeInHierarchy)
+                            {
+                                redChar.transform.position = _target3L;
+                                if (level1Steps == 0)
+                                    redChar.transform.rotation = Quaternion.Euler(0, 180, 0);
+                                else
+                                    redChar.transform.rotation = Quaternion.Euler(0, 180 + 45, 0);
+                                redChar.SetActive(true);
+                                counterL--;
+                                if (counterL == 0) break;
+                            }
+                        }
+
+                        int counterR = 4;
+                        foreach (GameObject redChar in _redCharacterList)
+                        {
+                            if (!redChar.activeInHierarchy)
+                            {
+                                redChar.transform.position = _target3R;
+                                if (level1Steps == 0)
+                                    redChar.transform.rotation = Quaternion.Euler(0, 180, 0);
+                                else
+                                    redChar.transform.rotation = Quaternion.Euler(0, 180 + 45, 0);
+                                redChar.SetActive(true);
+                                counterR--;
+                                if (counterR == 0) break;
+                            }
+                        }
+                    }
+
+                    
                 });
                 count -= 4;
             } 
         });
     }
+
+    private void OnTriggerLeftTriggered()
+    {
+        Debug.Log("MCGameManager, OnTriggerLeftTriggered");
+        _targetOfNavMeshes = _target3L;
+    }
+
+    private void OnTriggerRightTriggered()
+    {
+        Debug.Log("MCGameManager, OnTriggerRightTriggered");
+        _targetOfNavMeshes = _target3R;
+    }
+
 }

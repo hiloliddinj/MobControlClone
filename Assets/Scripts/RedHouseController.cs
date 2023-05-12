@@ -9,12 +9,14 @@ public class RedHouseController : MonoBehaviour
     [SerializeField] private ParticleSystem _smallRedPS;
     [SerializeField] private ParticleSystem _firePS;
 
-    private int amountOnRedHouse = 0;
+    private int _amountOnRedHouse = 0;
+
+    private bool _dead = false;
 
     private void Start()
     {
-        amountOnRedHouse = int.Parse(gameObject.name);
-        _textOnHead.text = amountOnRedHouse.ToString();
+        _amountOnRedHouse = int.Parse(gameObject.name);
+        _textOnHead.text = _amountOnRedHouse.ToString();
     }
 
     private void OnCollisionEnter(Collision collision)
@@ -22,18 +24,23 @@ public class RedHouseController : MonoBehaviour
         if (collision.gameObject.CompareTag(TagConst.blueCharacter))
         {
             collision.gameObject.GetComponent<BlueCharacterController>().Die();
-            amountOnRedHouse--;
-            _textOnHead.text = amountOnRedHouse.ToString();
+            _amountOnRedHouse--;
+            _textOnHead.text = _amountOnRedHouse.ToString();
             _smallRedPS.Play();
 
-            if (amountOnRedHouse <= 0)
+            if (_amountOnRedHouse <= 0)
             {
                 _firePS.Play();
                 gameObject.SetActive(false);
                 EventManager.current.KillAllCharactersTrigger();
                 EventManager.current.BlueScoreIncreaseTrigger(1);
                 EventManager.current.YellowScoreIncreaseTrigger(200);
-                EventManager.current.GoToNextInLevelTrigger();
+                if (!_dead)
+                {
+                    _dead = true;
+                    EventManager.current.GoToNextInLevelTrigger();
+                }
+                
             }
             else
             {
@@ -44,21 +51,25 @@ public class RedHouseController : MonoBehaviour
         else if (collision.gameObject.CompareTag(TagConst.yellowCharacter))
         {
             collision.gameObject.GetComponent<YellowCharacterController>().Die();
-            if (amountOnRedHouse >= 2)
-                amountOnRedHouse -= 2;
+            if (_amountOnRedHouse >= 2)
+                _amountOnRedHouse -= 2;
             else
-                amountOnRedHouse --;
-            _textOnHead.text = amountOnRedHouse.ToString();
+                _amountOnRedHouse --;
+            _textOnHead.text = _amountOnRedHouse.ToString();
             _smallRedPS.Play();
 
-            if (amountOnRedHouse <= 0)
+            if (_amountOnRedHouse <= 0)
             {
                 _firePS.Play();
                 gameObject.SetActive(false);
                 EventManager.current.KillAllCharactersTrigger();
                 EventManager.current.BlueScoreIncreaseTrigger(2);
                 EventManager.current.YellowScoreIncreaseTrigger(200);
-                EventManager.current.GoToNextInLevelTrigger();
+                if (!_dead)
+                {
+                    _dead = true;
+                    EventManager.current.GoToNextInLevelTrigger();
+                }
             }
             else
             {

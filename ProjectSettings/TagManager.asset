@@ -12,6 +12,8 @@ TagManager:
   - yellowCharacter
   - redCharacter
   - trigger1
+  - triggerLeft
+  - triggerRight
   layers:
   - Default
   - TransparentFX

@@ -14,7 +14,6 @@ public class BlueCharacterController : MonoBehaviour
     {
         if (other.CompareTag(TagConst.redCharacter))
         {
-            Debug.Log("BlueCharacterController, redCharacter touched");
             Die();
             other.gameObject.SetActive(false);
             EventManager.current.BlueScoreIncreaseTrigger(1);
