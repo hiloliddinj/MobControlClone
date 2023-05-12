@@ -40,19 +40,24 @@ public class YellowCharacterController : MonoBehaviour
 
             DOVirtual.DelayedCall(0.5f, () =>
             {
-                _navMeshAgent.SetDestination(target);
+                if (gameObject.activeInHierarchy)
+                    _navMeshAgent.SetDestination(target);
             });
         }
         else
         {
             _navMeshAgent.SetDestination(target);
+            DOVirtual.DelayedCall(0.5f, () =>
+            {
+                isGunGenerate = true;
+            });
         }
     }
 
     public void Collided()
     {
         collidedToMultiplier = true;
-        DOVirtual.DelayedCall(1.0f, () =>
+        DOVirtual.DelayedCall(0.5f, () =>
         {
             collidedToMultiplier = false;
         });

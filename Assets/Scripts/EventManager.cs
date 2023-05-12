@@ -18,6 +18,8 @@ public class EventManager : MonoBehaviour
 
     public event Action GoToNextInLevel;
 
+    public event Action Trigger1;
+
     private void Awake()
     {
         if (current == null)
@@ -66,6 +68,11 @@ public class EventManager : MonoBehaviour
     public void GoToNextInLevelTrigger()
     {
         GoToNextInLevel?.Invoke();
+    }
+
+    public void Trigger1Trigger()
+    {
+        Trigger1?.Invoke();
     }
 
 }

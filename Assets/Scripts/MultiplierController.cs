@@ -1,18 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MultiplierController : MonoBehaviour
 {
-    void Start()
-    {
-        
-    }
-
-    void Update()
-    {
-        
-    }
 
     private void OnTriggerEnter(Collider other)
     {
@@ -24,9 +13,22 @@ public class MultiplierController : MonoBehaviour
             {
                 bCC.Collided();
                 int amount = int.Parse(gameObject.name);
-                Debug.Log("MultiplierController, amount: " + amount);
+                //Debug.Log("MultiplierController, amount: " + amount);
                 MCGameManager mCGameManager = GameObject.FindGameObjectWithTag(TagConst.gameManager).GetComponent<MCGameManager>();
-                mCGameManager.OnMultiplierGenerate(gameObject.transform.position, amount);
+                mCGameManager.OnMultiplierGenerate(gameObject.transform.position, amount, true);
+            }
+        }
+        else if (other.CompareTag(TagConst.yellowCharacter))
+        {
+            YellowCharacterController yCC = other.GetComponent<YellowCharacterController>();
+
+            if (yCC.isGunGenerate && !yCC.collidedToMultiplier)
+            {
+                yCC.Collided();
+                int amount = int.Parse(gameObject.name);
+                //Debug.Log("MultiplierController, amount: " + amount);
+                MCGameManager mCGameManager = GameObject.FindGameObjectWithTag(TagConst.gameManager).GetComponent<MCGameManager>();
+                mCGameManager.OnMultiplierGenerate(gameObject.transform.position, amount, false);
             }
         }
     }

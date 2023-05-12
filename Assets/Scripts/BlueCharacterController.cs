@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
 using UnityEngine.AI;
@@ -11,6 +9,17 @@ public class BlueCharacterController : MonoBehaviour
     public bool collidedToMultiplier = false;
 
     private NavMeshAgent _navMeshAgent;
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag(TagConst.redCharacter))
+        {
+            Debug.Log("BlueCharacterController, redCharacter touched");
+            Die();
+            other.gameObject.SetActive(false);
+            EventManager.current.BlueScoreIncreaseTrigger(1);
+        }
+    }
 
     public void MoveAfterGunGenerate()
     {
@@ -34,19 +43,24 @@ public class BlueCharacterController : MonoBehaviour
 
             DOVirtual.DelayedCall(0.5f, () =>
             {
-                _navMeshAgent.SetDestination(target);
+                if (gameObject.activeInHierarchy)
+                    _navMeshAgent.SetDestination(target);
             });
 
         } else
         {
             _navMeshAgent.SetDestination(target);
+            DOVirtual.DelayedCall(0.5f, () =>
+            {
+                isGunGenerate = true;
+            });
         }
     }
 
     public void Collided()
     {
         collidedToMultiplier = true;
-        DOVirtual.DelayedCall(1.0f, () =>
+        DOVirtual.DelayedCall(0.5f, () =>
         {
             collidedToMultiplier = false;
         });

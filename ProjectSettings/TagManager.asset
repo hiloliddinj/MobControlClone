@@ -10,6 +10,8 @@ TagManager:
   - blueCharacter
   - redHouse
   - yellowCharacter
+  - redCharacter
+  - trigger1
   layers:
   - Default
   - TransparentFX
